@@ -7,6 +7,7 @@ export type CreateGame = {
 
 export const makeGame = ({ context, canvas }: CreateGame) => {
   const controller = new Controller();
+  controller.registerController();
   const color = "blue";
 
   const snake = new Snake({ color, controller, context, canvas });

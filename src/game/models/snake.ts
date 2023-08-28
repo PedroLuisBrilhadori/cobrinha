@@ -1,4 +1,4 @@
-import { Color, Direction } from "../types";
+import { Color, Direction, Action } from "../types";
 import { Controller } from "./controller";
 
 export type CreateSnake = {
@@ -31,16 +31,28 @@ export class Snake {
 
   update() {
     const direction = this.controller.getDirection();
+    const action = this.controller.action;
+    this.last = { x: this.x, y: this.y };
+
+    if (action) return this.runAction(action);
 
     if (direction === "stop") return;
 
-    this.last = { x: this.x, y: this.y };
     this.move(direction);
   }
 
   draw() {
     this.context.clearRect(this.last.x, this.last.y, this.size, this.size);
     this.context.fillRect(this.x, this.y, this.size, this.size);
+  }
+
+  private runAction(action: Action) {
+    if (action) {
+      this.reset();
+      this.controller.clearAction();
+
+      return;
+    }
   }
 
   private isPossible() {
@@ -58,11 +70,21 @@ export class Snake {
       return true;
 
     this.alive = false;
+
     return false;
   }
 
+  private reset() {
+    this.x = 0;
+    this.y = 0;
+    this.alive = true;
+    this.speed = 1;
+  }
+
   private move(direction: Direction) {
-    if (!this.isPossible()) return;
+    if (!this.isPossible()) {
+      if (!this.alive) return this.reset();
+    }
 
     switch (direction) {
       case "up":
