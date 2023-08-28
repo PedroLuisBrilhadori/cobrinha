@@ -15,6 +15,7 @@ export class Snake {
   direction: Direction = "stop";
   speed: number = 1;
   color: Color;
+  size: number = 10;
 
   private last: { x: number; y: number } = { x: 0, y: 0 };
   private controller: Controller;
@@ -38,16 +39,25 @@ export class Snake {
   }
 
   draw() {
-    this.context.clearRect(this.last.x, this.last.y, 1, 1);
-    this.context.fillRect(this.x, this.y, 1, 1);
+    this.context.clearRect(this.last.x, this.last.y, this.size, this.size);
+    this.context.fillRect(this.x, this.y, this.size, this.size);
   }
 
   private isPossible() {
     const width = this.canvas.width;
     const heigth = this.canvas.height;
 
-    if (this.y < heigth && this.x < width) return true;
+    if (!this.alive) return false;
 
+    if (
+      this.y < heigth - this.size &&
+      this.x < width - this.size &&
+      this.y > -1 &&
+      this.x > -1
+    )
+      return true;
+
+    this.alive = false;
     return false;
   }
 

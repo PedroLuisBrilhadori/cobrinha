@@ -11,24 +11,7 @@ function App() {
     const context = canvas?.getContext("2d");
 
     if (context && canvas) {
-      const snake = makeGame({ context, canvas });
-
-      let frames = 0;
-      let framId = 0;
-
-      const loop = () => {
-        snake.update();
-        snake.draw();
-
-        frames = frames + 1;
-        framId = window.requestAnimationFrame(loop);
-      };
-
-      loop();
-
-      return () => {
-        window.cancelAnimationFrame(framId);
-      };
+      return makeGame({ context, canvas });
     }
   });
 
