@@ -1,4 +1,4 @@
-import { Position } from "..";
+import { Map, Object, Position } from "..";
 import { GameInfo } from "./game-info";
 
 export type CreateFood = {
@@ -6,6 +6,7 @@ export type CreateFood = {
   context: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement;
   seconds: number;
+  map: Map;
 };
 
 export class Food {
@@ -13,7 +14,7 @@ export class Food {
   private x: number = this.startPosition.x;
   private y: number = this.startPosition.y;
   private last: Position = this.startPosition;
-  private size: number = 10;
+  private size: number = 11;
 
   private loading: boolean = false;
   private alive: boolean = false;
@@ -21,12 +22,15 @@ export class Food {
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
   private time: number = 5000;
+  private map: Map;
 
-  constructor({ context, canvas, seconds }: CreateFood) {
+  constructor({ context, canvas, seconds, map }: CreateFood) {
     this.context = context;
     this.canvas = canvas;
+    this.map = map;
 
     this.time = seconds * 1000;
+    this.map.registerObject(this.getObject());
   }
 
   update() {
@@ -37,6 +41,7 @@ export class Food {
 
     setTimeout(() => {
       this.randomPosition();
+      this.map.updateObject(this.getObject());
       this.alive = true;
       this.loading = false;
     }, this.time);
@@ -52,6 +57,15 @@ export class Food {
     this.context.fillRect(this.x, this.y, this.size, this.size);
 
     this.context.fillStyle = oldColor;
+  }
+
+  private getObject(): Object {
+    return {
+      name: "food",
+      x: this.x,
+      y: this.y,
+      size: this.size,
+    };
   }
 
   private randomPosition() {

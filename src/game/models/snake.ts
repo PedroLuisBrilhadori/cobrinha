@@ -1,6 +1,7 @@
 import { Color, Direction, Action, Position } from "../types";
 import { Controller } from "./controller";
 import { GameInfo } from "./game-info";
+import { Map } from "./map";
 
 export type CreateSnake = {
   color: Color;
@@ -8,11 +9,12 @@ export type CreateSnake = {
   gameInfo: GameInfo;
   context: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement;
+  map: Map;
 };
 
 export class Snake {
   private speed: number = 1;
-  private size: number = 10;
+  private size: number = 11;
 
   private startPosition: Position = { x: 10, y: 10 };
   private x: number = this.startPosition.x;
@@ -23,12 +25,16 @@ export class Snake {
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
   private gameInfo: GameInfo;
+  private map: Map;
 
-  constructor({ controller, context, canvas, gameInfo }: CreateSnake) {
+  constructor({ controller, context, canvas, gameInfo, map }: CreateSnake) {
     this.gameInfo = gameInfo;
     this.controller = controller;
     this.context = context;
     this.canvas = canvas;
+    this.map = map;
+
+    this.map.registerObject(this.getObject());
   }
 
   update() {
@@ -41,6 +47,7 @@ export class Snake {
     if (direction === "stop") return;
 
     this.move(direction);
+    this.map.updateObject(this.getObject());
   }
 
   draw() {
@@ -55,6 +62,15 @@ export class Snake {
 
       return;
     }
+  }
+
+  private getObject() {
+    return {
+      name: "snake",
+      x: this.x,
+      y: this.y,
+      size: this.size,
+    };
   }
 
   private isPossible() {
