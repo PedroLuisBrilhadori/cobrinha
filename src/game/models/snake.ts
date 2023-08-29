@@ -1,17 +1,19 @@
 import { Color, Direction, Action } from "../types";
 import { Controller } from "./controller";
+import { GameInfo } from "./game-info";
 
 export type CreateSnake = {
   color: Color;
   controller: Controller;
+  gameInfo: GameInfo;
   context: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement;
 };
 
 export class Snake {
   alive: boolean = true;
-  x: number = 0;
-  y: number = 0;
+  x: number = 10;
+  y: number = 10;
   direction: Direction = "stop";
   speed: number = 1;
   color: Color;
@@ -21,9 +23,11 @@ export class Snake {
   private controller: Controller;
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
+  private gameInfo: GameInfo;
 
-  constructor({ color, controller, context, canvas }: CreateSnake) {
+  constructor({ color, controller, context, canvas, gameInfo }: CreateSnake) {
     this.color = color;
+    this.gameInfo = gameInfo;
     this.controller = controller;
     this.context = context;
     this.canvas = canvas;
@@ -56,22 +60,18 @@ export class Snake {
   }
 
   private isPossible() {
-    const width = this.canvas.width;
-    const heigth = this.canvas.height;
-
-    if (!this.alive) return false;
+    const width = this.canvas.width + 5;
+    const heigth = this.canvas.height + 5;
 
     if (
-      this.y < heigth - this.size &&
-      this.x < width - this.size &&
-      this.y > -1 &&
-      this.x > -1
+      this.x < -1 ||
+      this.x + this.size > width ||
+      this.y < -1 ||
+      this.y + this.size > heigth
     )
-      return true;
+      return false;
 
-    this.alive = false;
-
-    return false;
+    return true;
   }
 
   private reset() {
@@ -79,12 +79,12 @@ export class Snake {
     this.y = 0;
     this.alive = true;
     this.speed = 1;
+    this.controller.clearAction();
+    this.gameInfo.addAtempt();
   }
 
   private move(direction: Direction) {
-    if (!this.isPossible()) {
-      if (!this.alive) return this.reset();
-    }
+    if (!this.isPossible()) return;
 
     switch (direction) {
       case "up":

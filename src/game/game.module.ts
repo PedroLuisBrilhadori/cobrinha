@@ -1,16 +1,17 @@
-import { Controller, Snake } from ".";
+import { Controller, GameInfo, Snake } from ".";
 
 export type CreateGame = {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
+  gameInfo: GameInfo;
 };
 
-export const makeGame = ({ context, canvas }: CreateGame) => {
+export const makeGame = ({ context, canvas, gameInfo }: CreateGame) => {
   const controller = new Controller();
   controller.registerController();
   const color = "blue";
 
-  const snake = new Snake({ color, controller, context, canvas });
+  const snake = new Snake({ gameInfo, color, controller, context, canvas });
 
   let frames = 0;
   let framId = 0;

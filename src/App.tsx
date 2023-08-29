@@ -1,28 +1,22 @@
-import { useEffect, useRef } from "react";
 import "./App.css";
-import { makeGame } from "./game/game.module";
+import { GameInfoComponent } from "./components";
+import { useCanvas } from "./hooks/use-canvas";
 
 function App() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const size = 300;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-
-    if (context && canvas) {
-      return makeGame({ context, canvas });
-    }
-  });
+  const { canvasRef, gameInfo } = useCanvas();
 
   return (
-    <div className="flex justify-center items-center border-2">
-      <canvas
-        ref={canvasRef}
-        id="game-canvas"
-        width={size}
-        height={size}
-      ></canvas>
+    <div>
+      <GameInfoComponent gameInfo={gameInfo} />
+      <div className="flex justify-center items-center border-2">
+        <canvas
+          ref={canvasRef}
+          id="game-canvas"
+          width={size}
+          height={size}
+        ></canvas>
+      </div>
     </div>
   );
 }
