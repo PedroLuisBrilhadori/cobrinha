@@ -11,24 +11,20 @@ export type CreateSnake = {
 };
 
 export class Snake {
-  alive: boolean = true;
+  private speed: number = 1;
+  private size: number = 10;
 
-  direction: Direction = "stop";
-  speed: number = 1;
-  color: Color;
-  size: number = 10;
-  startPosition: Position = { x: 10, y: 10 };
-  x: number = this.startPosition.x;
-  y: number = this.startPosition.y;
+  private startPosition: Position = { x: 10, y: 10 };
+  private x: number = this.startPosition.x;
+  private y: number = this.startPosition.y;
+  private last: Position = this.startPosition;
 
-  private last: Position = { x: 0, y: 0 };
   private controller: Controller;
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
   private gameInfo: GameInfo;
 
-  constructor({ color, controller, context, canvas, gameInfo }: CreateSnake) {
-    this.color = color;
+  constructor({ controller, context, canvas, gameInfo }: CreateSnake) {
     this.gameInfo = gameInfo;
     this.controller = controller;
     this.context = context;
@@ -79,7 +75,6 @@ export class Snake {
   private reset() {
     this.x = this.startPosition.x;
     this.y = this.startPosition.y;
-    this.alive = true;
     this.speed = 1;
     this.controller.cleanDirecion();
     this.gameInfo.addAtempt();
