@@ -25,7 +25,6 @@ export class Controller {
     };
 
     window.addEventListener("keydown", (event) => {
-      console.log(event.key);
       handler(event);
     });
   }
@@ -36,6 +35,10 @@ export class Controller {
 
   clearAction() {
     this.action = null;
+  }
+
+  cleanDirecion() {
+    this.direction = "stop";
   }
 
   private setAction(key: string) {

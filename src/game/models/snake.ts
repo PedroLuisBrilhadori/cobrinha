@@ -1,4 +1,4 @@
-import { Color, Direction, Action } from "../types";
+import { Color, Direction, Action, Position } from "../types";
 import { Controller } from "./controller";
 import { GameInfo } from "./game-info";
 
@@ -12,14 +12,16 @@ export type CreateSnake = {
 
 export class Snake {
   alive: boolean = true;
-  x: number = 10;
-  y: number = 10;
+
   direction: Direction = "stop";
   speed: number = 1;
   color: Color;
   size: number = 10;
+  startPosition: Position = { x: 10, y: 10 };
+  x: number = this.startPosition.x;
+  y: number = this.startPosition.y;
 
-  private last: { x: number; y: number } = { x: 0, y: 0 };
+  private last: Position = { x: 0, y: 0 };
   private controller: Controller;
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -75,11 +77,11 @@ export class Snake {
   }
 
   private reset() {
-    this.x = 0;
-    this.y = 0;
+    this.x = this.startPosition.x;
+    this.y = this.startPosition.y;
     this.alive = true;
     this.speed = 1;
-    this.controller.clearAction();
+    this.controller.cleanDirecion();
     this.gameInfo.addAtempt();
   }
 

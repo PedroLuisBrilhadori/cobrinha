@@ -5,3 +5,4 @@ export type KeyAction = " " | "Escape";
 export type Action = "reset";
 export type KeyActionMap = { " ": Action; Escape: Action };
 export type Keymap = { w: Direction; a: Direction; s: Direction; d: Direction };
+export type Position = { x: number; y: number };
