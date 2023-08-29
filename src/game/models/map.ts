@@ -31,11 +31,13 @@ export class Map {
     if (!this.objectExists(object.name))
       throw new Error("O objeto não existe no mapa");
 
-    const result = this.objects.filter(({ x, y, name }) => {
-      const colision = object.x === x || object.y === y;
+    const result = this.objects.filter(({ x, y, name, size }) => {
+      const colisionY = object.y < y + size / 2 && object.y > y - size / 2;
+      const colisionX = object.x < x + size / 2 && object.x > x - size / 2;
+      const colision = colisionX && colisionY;
       const otherObject = name !== object.name;
 
-      return colision && otherObject;
+      return !colision && otherObject;
     });
 
     return result.length === 0;

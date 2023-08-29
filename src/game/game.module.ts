@@ -21,7 +21,7 @@ export const makeGame = ({ context, canvas, gameInfo }: CreateGame) => {
     canvas,
     map,
   });
-  const food = new Food({ canvas, context, gameInfo, seconds: 3, map });
+  const food = new Food({ canvas, context, gameInfo, seconds: 1, map });
 
   let frames = 0;
   let framId = 0;
