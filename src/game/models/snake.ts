@@ -19,7 +19,6 @@ export class Snake {
   color: Color;
   size: number = 10;
 
-  private last: { x: number; y: number } = { x: 0, y: 0 };
   private controller: Controller;
   private context: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -33,10 +32,14 @@ export class Snake {
     this.canvas = canvas;
   }
 
+  init() {
+    this.setRandomPosition();
+    this.gameInfo.loadingComplete();
+  }
+
   update() {
     const direction = this.controller.getDirection();
     const action = this.controller.action;
-    this.last = { x: this.x, y: this.y };
 
     if (action) return this.runAction(action);
 
@@ -46,8 +49,17 @@ export class Snake {
   }
 
   draw() {
-    this.context.clearRect(this.last.x, this.last.y, this.size, this.size);
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillRect(this.x, this.y, this.size, this.size);
+  }
+
+  private setRandomPosition() {
+    const padding = this.size * 2;
+    const width = this.canvas.width - padding;
+    const height = this.canvas.height - padding;
+
+    this.x = Math.random() * (width - padding) + padding;
+    this.y = Math.random() * (height - padding) + padding;
   }
 
   private runAction(action: Action) {
@@ -75,8 +87,7 @@ export class Snake {
   }
 
   private reset() {
-    this.x = 0;
-    this.y = 0;
+    this.setRandomPosition();
     this.alive = true;
     this.speed = 1;
     this.controller.clearAction();
@@ -86,21 +97,23 @@ export class Snake {
   private move(direction: Direction) {
     if (!this.isPossible()) return;
 
-    switch (direction) {
-      case "up":
+    const actions: { [key in Direction]: VoidFunction } = {
+      up: () => {
         this.y -= this.speed;
-        break;
-      case "down":
+      },
+      down: () => {
         this.y += this.speed;
-        break;
-      case "right":
+      },
+      right: () => {
         this.x += this.speed;
-        break;
-      case "left":
+      },
+
+      left: () => {
         this.x -= this.speed;
-        break;
-      default:
-        break;
-    }
+      },
+      stop: () => {},
+    };
+
+    actions[direction]();
   }
 }

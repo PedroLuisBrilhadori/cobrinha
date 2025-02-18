@@ -13,6 +13,8 @@ export const makeGame = ({ context, canvas, gameInfo }: CreateGame) => {
 
   const snake = new Snake({ gameInfo, color, controller, context, canvas });
 
+  snake.init();
+
   let frames = 0;
   let framId = 0;
 

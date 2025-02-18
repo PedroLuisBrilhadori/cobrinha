@@ -1,6 +1,7 @@
 export type Info = {
   points: number;
   atempts: number;
+  loaded: boolean;
 };
 
 export type CreateGameInfo = {
@@ -12,6 +13,8 @@ export class GameInfo {
   private points: number = 0;
 
   private atempts: number = 0;
+
+  private loaded: boolean = false;
 
   private setInfo: React.Dispatch<React.SetStateAction<Info>>;
 
@@ -25,6 +28,15 @@ export class GameInfo {
     this.setInfo({
       points: this.points,
       atempts: this.atempts,
+      loaded: this.loaded,
+    });
+  }
+
+  loadingComplete() {
+    this.loaded = true;
+    this.setInfo((value) => {
+      value.loaded = this.loaded;
+      return value;
     });
   }
 
